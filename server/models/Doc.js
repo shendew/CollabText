@@ -6,6 +6,8 @@ const docSchema = new mongoose.Schema({
     description: { type: String },
     doc_content: { type: Buffer },
     doc_owner: { type: String, required: true },
+    isPublic: { type: Boolean, default: false },
+    accessList: [String]
 })
 
 export default mongoose.model('Doc', docSchema);

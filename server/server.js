@@ -15,6 +15,7 @@ import cors from 'cors';
 // import mongoose from 'mongoose';
 import authRoutes from './routes/authRoute.js';
 import docRoutes from './routes/docRoute.js';
+import userRoutes from './routes/userRoute.js';
 import verifyToken from './middleware/verifyToken.js'
 
 const app = express();
@@ -22,8 +23,13 @@ const client = new MongoClient(process.env.MONGO_URI);
 const db = client.db('agro');
 const collection = db.collection('docs');
 
+app.use(cors({
+    origin: '*', // Or your specific frontend URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json())
-app.use(cors());
+
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connected'))
@@ -34,6 +40,7 @@ app.get('/', (req, res) => {
 });
 app.use('/api/auth', authRoutes);
 
+app.use('/api/v1/user', verifyToken, userRoutes);
 app.use('/api/v1', verifyToken, docRoutes);
 
 
